@@ -79,7 +79,7 @@ fig_ps_cas <- dplyr::bind_rows(
 	ggplot(aes(x = name, y = n)) +  
 	geom_bar(aes(fill = name), stat = "identity", show.legend = FALSE) + 
 	geom_text(aes(label = label), size = 4, fontface = "bold", vjust = -0.5) + 
-	scale_y_continuous(limits = c(0, 720)) +
+	scale_y_continuous(limits = c(0, 1000)) +
 	labs(x = "", y = "Count",
 			 title = "Mobilization and Pre-screening Cascade")
 fig_ps_cas
