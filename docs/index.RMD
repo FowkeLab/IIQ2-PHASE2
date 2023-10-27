@@ -1,0 +1,52 @@
+---
+title: "Dashboard for IIQ-2 Study"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+source("R/script.R")
+library(flexdashboard)
+```
+
+Updated on `r Sys.Date()`
+
+Row {data-height=400}
+-------------------------------------
+
+### #1 Mobilization and Pre-screening Cascade
+
+```{r, fig.width=6, fig.height=4}
+fig_ps_cas
+```
+
+### #2 Reasons for non-eligiblity
+
+```{r, fig.width=6, fig.height=4}
+fig_ps_elim
+```
+
+
+Row {data-height=600 .tabset .tabset-fade}
+-------------------------------------
+
+### #3 Study Cascade: Recruitment & Appointment
+
+```{r, fig.width=10, fig.height=7}
+fig_ra
+```
+
+### #4 Cascade of Lab Results
+
+```{r, fig.width=20, fig.height=7}
+fig_lab
+```
+
+### #4 Cascade of Lab Results
+
+
+```{r, fig.width=10, fig.height=7}
+fig_retest
+```
