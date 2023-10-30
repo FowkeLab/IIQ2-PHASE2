@@ -18,7 +18,7 @@ Row {data-height=400}
 
 ### #1 Mobilization and Pre-screening Cascade
 
-```{r, fig.width=6, fig.height=4}
+```{r, fig.width=10, fig.height=4}
 fig_ps_cas
 ```
 
@@ -34,7 +34,7 @@ Row {data-height=600 .tabset .tabset-fade}
 
 ### #3 Study Cascade: Recruitment & Appointment
 
-```{r, fig.width=10, fig.height=7}
+```{r, fig.width=25, fig.height=7}
 fig_ra
 ```
 
