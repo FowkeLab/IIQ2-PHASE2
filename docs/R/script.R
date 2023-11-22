@@ -79,7 +79,7 @@ fig_ps_cas <- dplyr::bind_rows(
 	ggplot(aes(x = name, y = n)) +  
 	geom_bar(aes(fill = name), stat = "identity", show.legend = FALSE) + 
 	geom_text(aes(label = label), size = 4, fontface = "bold", vjust = -0.5) + 
-	scale_y_continuous(limits = c(0, 1000)) +
+	scale_y_continuous(limits = c(0, 720)) +
 	labs(x = "", y = "Count",
 			 title = "Mobilization and Pre-screening Cascade")
 fig_ps_cas
@@ -152,11 +152,13 @@ lab_sheets <- c("Prescreening", "Clinic Follow Up", "Enrolment v1",
 								paste0("FollowUp v", 2:8))
 
 lab <- purrr::map(lab_sheets, function(x) {
-	if (x == "Enrolment v1") {
+	if (x %in% c("Prescreening", "Enrolment v1")) {
 		df <- googlesheets4::read_sheet(gs_name, sheet = x, skip = 0)
 	} else {
 		df <- googlesheets4::read_sheet(gs_name, sheet = x, skip = 1)
 	}
+	print(x)
+	glimpse(df)
 	if (x == "Prescreening") {
 		df <- df |> 
 			# glimpse() |> 
@@ -167,16 +169,26 @@ lab <- purrr::map(lab_sheets, function(x) {
 			dplyr::select(pid = 2, RPR, CT, NG, TV, BV) 
 	}
 	
-	df |> 
-		# dplyr::glimpse() |>
-		dplyr::mutate(
-			source = x, 
-			across(RPR:BV, ~ if_else(.x == "-", NA, .x)), 
-			across(RPR:TV, ~ if_else(.x == "Neg", "Negative", .x)), 
-			BV = if_else(BV == "Internediate", "Intermediate", BV)
-		)
+	if (nrow(df) > 0) {
+		df |> 
+			# dplyr::glimpse() |>
+			dplyr::mutate(
+				source = x, 
+				across(RPR:BV, ~ if_else(.x == "-", NA, .x)), 
+				across(RPR:TV, ~ if_else(.x == "Neg", "Negative", .x)), 
+				BV = if_else(BV == "Internediate", "Intermediate", BV), 
+			)
+	} else {
+		df |> 
+			mutate(
+				Date = as.Date(NA), 
+				across(-Date, as.character)
+			)
+	}
 }) |> 
 	purrr::reduce(bind_rows)
+
+
 
 
 fig_lab <- purrr::map(c("RPR", "CT", "NG", "TV", "BV"), function(x) {
