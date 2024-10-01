@@ -1,6 +1,7 @@
 #Load the required library 
 library(tidyverse)
 library(googlesheets4)
+library(ggplot2)
 
 sheet1_id <- Sys.getenv("sheet1_id")
 sheet2_id <- Sys.getenv("sheet2_id")
@@ -97,13 +98,34 @@ fig_ps_elim <- ps |>
 	ggplot(aes(x = n, y = reasons_no_ps)) + 
 	geom_col(aes(fill = reasons_no_ps), show.legend = FALSE) + 
 	geom_text(aes(label = n), hjust = -0.25) + 
-	scale_x_continuous(limits = c(0, 150)) +
+	scale_x_continuous(limits = c(0, 100)) +
 	labs(y = "", x = "Count", 
 			 title = paste0(
-			 	"Reasons for non-eligiblity\n(N = ", 
+			 	"Reasons for non-eligibility\n(N = ", 
 			 	(ps |> filter(is.na(prescreened)) |> nrow()), ")"
 			 ))
-fig_ps_elim
+fig_ps_elim   
+
+fig_ps_elim1 <- ps |> 
+	dplyr::filter(is.na(prescreened)) |> 
+	dplyr::mutate(
+		reasons_no_ps = forcats::fct_infreq(reasons_no_ps),
+		reasons_no_ps = forcats::fct_lump_n(reasons_no_ps, 10), 
+		reasons_no_ps = forcats::fct_rev(reasons_no_ps)
+	) |> 
+	dplyr::count(reasons_no_ps) |> 
+	tidyr::drop_na(reasons_no_ps) |> 
+	ggplot(aes(x = n, y = reasons_no_ps)) + 
+	geom_col(aes(fill = reasons_no_ps), show.legend = FALSE) + 
+	geom_text(aes(label = n), hjust = -0.25) + 
+	scale_x_continuous(limits = c(0, 80)) +
+	labs(y = "", x = "Count", 
+			 title = paste0(
+			 	"Reasons for non-eligibility (n = ", 
+			 	(ps |> filter(is.na(prescreened)) |> nrow()), ")"
+			 ))
+fig_ps_elim1   
+
 
 
 

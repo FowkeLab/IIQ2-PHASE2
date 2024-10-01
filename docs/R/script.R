@@ -100,7 +100,7 @@ fig_ps_elim <- ps |>
 	scale_x_continuous(limits = c(0, 150)) +
 	labs(y = "", x = "Count", 
 			 title = paste0(
-			 	"Reasons for non-eligiblity\n(N = ", 
+			 	"Reasons for non-eligibility\n(N = ", 
 			 	(ps |> filter(is.na(prescreened)) |> nrow()), ")"
 			 ))
 fig_ps_elim
