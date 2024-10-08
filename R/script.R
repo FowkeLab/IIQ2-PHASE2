@@ -51,7 +51,7 @@ ps <- ps_raw |>
 	dplyr::mutate(
 		across(c(prescreened, eligible), stringr::str_to_lower), 
 		prescreened = dplyr::case_when(
-			prescreened == "yes" ~ "Pre-screened", 
+			prescreened == "yes" ~ "Clinically Tested", 
 		), 
 		eligible = dplyr::case_when(
 			eligible == "yes" ~ "Eligible", 
@@ -71,7 +71,7 @@ fig_ps_cas <- dplyr::bind_rows(
 ) |> 
 	tidyr::drop_na() |>
 	dplyr::mutate(
-		name = factor(name, c("Total", "Pre-screened", "Eligible", "Enrolled")), 
+		name = factor(name, c("Total", "Clinically Tested", "Eligible", "Enrolled")), 
 		N = dplyr::lag(n), 
 		pct = n / N, 
 		pct = scales::label_percent()(pct), 
@@ -105,26 +105,6 @@ fig_ps_elim <- ps |>
 			 	(ps |> filter(is.na(prescreened)) |> nrow()), ")"
 			 ))
 fig_ps_elim   
-
-fig_ps_elim1 <- ps |> 
-	dplyr::filter(is.na(prescreened)) |> 
-	dplyr::mutate(
-		reasons_no_ps = forcats::fct_infreq(reasons_no_ps),
-		reasons_no_ps = forcats::fct_lump_n(reasons_no_ps, 10), 
-		reasons_no_ps = forcats::fct_rev(reasons_no_ps)
-	) |> 
-	dplyr::count(reasons_no_ps) |> 
-	tidyr::drop_na(reasons_no_ps) |> 
-	ggplot(aes(x = n, y = reasons_no_ps)) + 
-	geom_col(aes(fill = reasons_no_ps), show.legend = FALSE) + 
-	geom_text(aes(label = n), hjust = -0.25) + 
-	scale_x_continuous(limits = c(0, 80)) +
-	labs(y = "", x = "Count", 
-			 title = paste0(
-			 	"Reasons for non-eligibility (n = ", 
-			 	(ps |> filter(is.na(prescreened)) |> nrow()), ")"
-			 ))
-fig_ps_elim1   
 
 
 

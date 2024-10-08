@@ -22,9 +22,9 @@ Row {data-height=400}
 fig_ps_cas
 ```
 
-### #2 Reasons for non-eligiblity
+### #2 Reasons for non-eligibility
 
-```{r, fig.width=6, fig.height=4}
+```{r, fig.width=8, fig.height=4}
 fig_ps_elim
 ```
 
@@ -44,7 +44,7 @@ fig_ra
 fig_lab
 ```
 
-### #4 Cascade of Lab Results
+### #5 Cascade of Lab Results
 
 
 ```{r, fig.width=10, fig.height=7}

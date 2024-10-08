@@ -1,6 +1,7 @@
 #Load the required library 
 library(tidyverse)
 library(googlesheets4)
+library(ggplot2)
 
 sheet1_id <- Sys.getenv("sheet1_id")
 sheet2_id <- Sys.getenv("sheet2_id")
@@ -50,7 +51,7 @@ ps <- ps_raw |>
 	dplyr::mutate(
 		across(c(prescreened, eligible), stringr::str_to_lower), 
 		prescreened = dplyr::case_when(
-			prescreened == "yes" ~ "Pre-screened", 
+			prescreened == "yes" ~ "Clinically Tested", 
 		), 
 		eligible = dplyr::case_when(
 			eligible == "yes" ~ "Eligible", 
@@ -70,7 +71,7 @@ fig_ps_cas <- dplyr::bind_rows(
 ) |> 
 	tidyr::drop_na() |>
 	dplyr::mutate(
-		name = factor(name, c("Total", "Pre-screened", "Eligible", "Enrolled")), 
+		name = factor(name, c("Total", "Clinically Tested", "Eligible", "Enrolled")), 
 		N = dplyr::lag(n), 
 		pct = n / N, 
 		pct = scales::label_percent()(pct), 
@@ -97,13 +98,14 @@ fig_ps_elim <- ps |>
 	ggplot(aes(x = n, y = reasons_no_ps)) + 
 	geom_col(aes(fill = reasons_no_ps), show.legend = FALSE) + 
 	geom_text(aes(label = n), hjust = -0.25) + 
-	scale_x_continuous(limits = c(0, 150)) +
+	scale_x_continuous(limits = c(0, 100)) +
 	labs(y = "", x = "Count", 
 			 title = paste0(
 			 	"Reasons for non-eligibility\n(N = ", 
 			 	(ps |> filter(is.na(prescreened)) |> nrow()), ")"
 			 ))
-fig_ps_elim
+fig_ps_elim   
+
 
 
 
